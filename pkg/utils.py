@@ -3,12 +3,13 @@ import json, csv
 from lxml import html, etree
 from bs4 import BeautifulSoup
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import os
 from dotenv import load_dotenv
 load_dotenv()
 from pkg.files import save_csv_file
+# from files import save_csv_file
 
 MY_KEY = os.getenv('MY_KEY')
 BASE_URL = os.getenv('BASE_URL')
@@ -17,9 +18,9 @@ CURRENCY_CODE_URL = os.getenv('CURRENCY_CODE_URL')
 DATA_PATH = os.getenv('DATA_PATH')
 
 
-def get_history_FX_rate(header: list, symbols: list, is_save: bool):
+def get_history_FX_rate(header: list, symbols: list, is_save: bool, date:str):
     symbols_data = ','.join(symbols)
-    url = f'{BASE_URL}/latest/?access_key={MY_KEY}&symbols={symbols_data}'
+    url = f'{BASE_URL}/{date}?access_key={MY_KEY}&symbols={symbols_data}'
     data = requests.get(url)
     data = json.loads(data.content)
 
@@ -32,7 +33,7 @@ def get_history_FX_rate(header: list, symbols: list, is_save: bool):
     }
     result.update(data['rates'])
     
-    path = os.path.join(DATA_PATH, 'fx_rate.csv')
+    path = os.path.join(DATA_PATH, 'fx_rate_2019.csv')
     with open(path, 'a', newline='\n') as file:
         dictwriter_object = csv.DictWriter(file, fieldnames=header)
 
@@ -79,13 +80,25 @@ def get_currency_code():
     return pd.DataFrame(columns=header, data=data)
 
 
-# currency_code = pd.read_csv('data/currency_code.csv')
-# currency_code = currency_code.dropna()
-# header = ['Base', 'Date', 'Timestamp']
-# symbols = currency_code['Code'].to_list()
-# header.extend(symbols)
-# get_history_FX_rate(header, symbols)
+if __name__ == '__main__':
+    currency_code = pd.read_csv('data/currency_code.csv')
+    currency_code = currency_code.dropna()
+    header = ['Base', 'Date', 'Timestamp']
+    symbols = currency_code['Code'].to_list()
+    symbols = list(set(symbols))
+    header.extend(symbols)
+    start = datetime(2019, 1, 1)
+    end = datetime(2019, 12, 31)
+    step = timedelta(days=1)
+    result_time = []
+    while start < end:
+        result_time.append(start.strftime('%Y-%m-%d'))
+        start += step
 
-# get_history_FX_rate(["USD","AUD","CAD","PLN","MXN"])
-# get_score_world_happiness_index()
-# get_currency_code()
+    data = {}
+    for date in result_time:
+        get_history_FX_rate(header, symbols, True, date)
+
+    # get_history_FX_rate(["USD","AUD","CAD","PLN","MXN"])
+    # get_score_world_happiness_index()
+    # get_currency_code()
