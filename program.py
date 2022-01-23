@@ -42,7 +42,9 @@ class Program(object):
         self.asset_portfolio.add( Stock('ABC',200,4) )
         self.asset_portfolio.add( Stock('ABC',300,5) )
         self.asset_portfolio.add( Stock('DDW',100,10) )
-        self.asset_portfolio.add( Cash(100.01) )
+        self.asset_portfolio.add( Cash(100.01, 'USD') )
+        self.asset_portfolio.add( Cash(50.01, 'USD') )
+        self.asset_portfolio.add( Cash(10.01, 'EUR') )
         
         return self
         # try:
@@ -56,19 +58,28 @@ class Program(object):
 
     
     def value_asset(self,date: str, currency_code:str, is_print=False):
-        if currency_code != 'EUR':
-            data = Program.get_history_FX_rate(date, currency_code)
-            exchange_rate = data.get('rates', {}).get(currency_code)
-        else: 
-            exchange_rate = 1
 
+        currency_code_data = pd.read_csv('data/currency_code.csv')
+        currency_code_data = currency_code_data.dropna()
+        header = ['Base', 'Date', 'Timestamp']
+        symbols = currency_code_data['Code'].to_list()
+        symbols = ','.join(symbols)
+
+        data = Program.get_history_FX_rate(date, symbols)
+
+        total_assets = 0.0
         assets = self.consolidate_asset()
-        total_assets = assets['cash']
+        # Convert from currency cash code to EUR cash
+        for key in assets['cash'].keys():
+            fx_rate = data.get('rates', {}).get(key)
+            total_assets += (1/fx_rate)*assets['cash'][key]
         
+        # Convert from currency stock code to EUR cash
         for key in assets['stock'].keys():
             total_assets += assets['stock'][key][2]
         
-        result = total_assets*exchange_rate
+        # convert the EUR to currency code
+        result = total_assets*data.get('rates').get(currency_code)
         if is_print:
             print(f"Total assets in {date}: {result} ({currency_code})")
         return result
@@ -76,12 +87,15 @@ class Program(object):
     
     def consolidate_asset(self):
         assets = {
-            'cash': 0.0,
+            'cash': {},
             'stock': {}
         }
         for item in self.asset_portfolio.portfolio:
             if isinstance(item, Cash):
-                assets['cash'] += item.amount
+                if not assets['cash'].get(item.code):
+                    assets['cash'][item.code] = item.amount
+                else:
+                    assets['cash'][item.code] += item.amount
             
             else:
                 if not assets.get('stock').get(item.symbol):
@@ -91,7 +105,9 @@ class Program(object):
                     assets['stock'][item.symbol][1] += item.price
                     assets['stock'][item.symbol][2] += item.shares*item.price
 
-        print(f"Cash: {assets['cash']} (EUR)")
+        for key in assets['cash'].keys():
+            print(f"Amount of {key}: {assets['cash'][key]}")
+        
         for key in assets['stock'].keys():
             shares = assets['stock'][key][0]
             avg_price = assets['stock'][key][2]/assets['stock'][key][0]
@@ -210,14 +226,15 @@ if __name__ == '__main__':
     # TODO: task 4, let run this command: python task_4.py
     ##########################################
     # TODO: task 5: uncomment to run
+    # currency_code = 'VND'
     # asset_portfolio.value_asset(
-    #     date='2019-02-02',
+    #     date='2019-02-03',
     #     currency_code='VND',
     #     is_print=True
     # )
     ##########################################
     # TODO: task 6: 
-    # asset_portfolio.consolidate_asset()
+    asset_portfolio.consolidate_asset()
     ##########################################
     # TODO: task 7:
     # asset_portfolio.plot_the_change_in_value(
@@ -228,3 +245,5 @@ if __name__ == '__main__':
     # TODO: task 8
     # asset_portfolio.prove_historically_FX_rate()
     ##########################################
+
+    # asset_portfolio.consolidate_asset()
