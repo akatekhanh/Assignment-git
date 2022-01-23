@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.dates as mdates
 
 from dotenv import load_dotenv
+from pkg.utils import get_currency_code, get_history_FX_rate, get_score_world_happiness_index
 load_dotenv()
 
 
@@ -190,12 +191,23 @@ if __name__ == '__main__':
     
     asset_portfolio = Program().add_to_asset()
 
+    # choise = input("Input your task you want to implement (from 2 to 9)")
     ##########################################
     # TODO: task 2 -> Program.get_history_FX_rate
+    # today = datetime.today().strftime("%Y-%m-%d")
+    # currency_code = input("Input your currency code you want to scrape: ")
+    # print(Program.get_history_FX_rate(today, currency_code))
     ##########################################
     # TODO: task 3a -> utils.get_currency_code
+    # Task 3a
+    # data_3a = get_currency_code()
+    # print(data)
+
+    # Task 3b
+    # data_3b = get_score_world_happiness_index()
+    # print(data_3b)
     ##########################################
-    # TODO: task 4, let run: python task_4.py
+    # TODO: task 4, let run this command: python task_4.py
     ##########################################
     # TODO: task 5: uncomment to run
     # asset_portfolio.value_asset(

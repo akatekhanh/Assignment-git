@@ -59,7 +59,7 @@ def get_score_world_happiness_index():
 
     # Write world happiness report to CSV file.
     save_csv_file(header=header, data=data, filename='world_happiness_report.csv')
-
+    return pd.DataFrame(columns=header, data=data)
 
 def get_currency_code():
     html_text = requests.get(CURRENCY_CODE_URL).text
@@ -75,6 +75,8 @@ def get_currency_code():
     
     # Write currency code to CSV file.
     save_csv_file(header=header, data=data, filename='currency_code.csv')
+
+    return pd.DataFrame(columns=header, data=data)
 
 
 # currency_code = pd.read_csv('data/currency_code.csv')

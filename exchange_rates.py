@@ -10,6 +10,7 @@ class Cash(ABC):
             amount (float): Amount
         """
         self.amount = amount
+        
     
     def get_rate( self, from_currency:str, to_currency:str ):
         return to_currency/from_currency
