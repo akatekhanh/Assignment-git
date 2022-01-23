@@ -1,10 +1,16 @@
 import os
+from re import L
 import pandas as pd
 import matplotlib.pyplot as plt
 import requests
 import json
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+import numpy as np
 from dotenv import load_dotenv
+from scipy.stats import zscore
 load_dotenv()
+
 
 BASE_URL = os.getenv('BASE_URL')
 MY_KEY = os.getenv('MY_KEY')
@@ -47,6 +53,25 @@ def build_fx_change_in_year(start: str, end: str, symbols: list):
 
     return fx_change
 
+def regression_model(data_point, label):
+    label = np.array(label).reshape(-1,1)
+    data_point = np.array(data_point).reshape(len(label),-1)
+        
+    model = LinearRegression()
+    model.fit(data_point, label)
+    return model
+
+def polynomial_preprocess(X):
+    poly = PolynomialFeatures(2)
+    X = np.array(list(X)).reshape(-1,1)
+    X_ = poly.fit_transform(X)
+    return X_
+
+def polynomial_process(X, y):
+    y = np.array(list(y)).reshape(-1,1)
+    X_ = polynomial_preprocess(X)
+    model = regression_model(X_, y)
+    return model
 
 if __name__ == '__main__':
     currency_code = pd.read_csv('data/currency_code.csv')
@@ -57,11 +82,24 @@ if __name__ == '__main__':
     data = preprocess_and_merge_data(fx_change)
     fx_change_year = data['Fx change']
     score = data['Score']
+
+    z_scores = zscore(data[['Fx change', 'Score']])
+    filtered_entries = (np.abs(z_scores) < 1.5).all(axis=1)
+    removed_outlier_data = data[filtered_entries]
+    
+    model_linear = regression_model(removed_outlier_data['Score'], removed_outlier_data['Fx change'])
+    model_polynomial = polynomial_process(removed_outlier_data['Score'], removed_outlier_data['Fx change'])
+
+    plt.plot(score, model_linear.predict(np.array(score).reshape(-1,1)).ravel(), 'b-', label='linear')
+    plt.plot(score, model_polynomial.predict(polynomial_preprocess(score)).ravel(), 'g--', label='polynomial with degree 2')
     plt.plot(score, fx_change_year, 'ro')
     plt.xlabel('Happiness Score')
     plt.ylabel('Fx change in 2019')
     plt.axis([3, 8, -20, 20])
+    plt.legend()
     if not os.path.isdir('imgs/'):
         os.mkdir('imgs/')
     plt.savefig('imgs/task4.png')
     plt.show()
+
+    

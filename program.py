@@ -225,7 +225,7 @@ if __name__ == '__main__':
     # TODO: task 3a -> utils.get_currency_code
     # Task 3a
     # data_3a = get_currency_code()
-    # print(data)
+    # print(data_3a)
 
     # Task 3b
     # data_3b = get_score_world_happiness_index()
@@ -243,13 +243,13 @@ if __name__ == '__main__':
     # )
     ##########################################
     # # TODO: task 6: 
-    # asset_portfolio.consolidate_asset()
+    # asset_portfolio.consolidate_asset(is_print=True)
     ##########################################
     # TODO: task 7:
-    asset_portfolio.plot_the_change_in_value(
-        year=2019,
-        currency_code='EUR'
-    )
+    # asset_portfolio.plot_the_change_in_value(
+    #     year=2019,
+    #     currency_code='EUR'
+    # )
     ##########################################
     # TODO: task 8
     # asset_portfolio.prove_historically_FX_rate()
