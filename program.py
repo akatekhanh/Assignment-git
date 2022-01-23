@@ -214,5 +214,5 @@ if __name__ == '__main__':
     # )
     ##########################################
     # TODO: task 8
-    asset_portfolio.prove_historically_FX_rate()
+    # asset_portfolio.prove_historically_FX_rate()
     ##########################################

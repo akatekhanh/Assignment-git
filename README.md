@@ -15,5 +15,14 @@
 # Task 4:
     - python.py task_4.py
 
-# Task 5:
-- 
+# Task 5: uncomment to run
+    - Program.value_asset()
+
+# Task 6: 
+    - Program.consolidate_asset()
+
+# Task 7:
+    - Program.plot_the_change_in_value(year, currency_code)
+
+# Task 8:
+    - Program.prove_historically_FX_rate()
