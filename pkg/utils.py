@@ -80,15 +80,15 @@ def get_currency_code():
     return pd.DataFrame(columns=header, data=data)
 
 
-if __name__ == '__main__':
+def get_history_FX_rate_in_year(year:int): 
     currency_code = pd.read_csv('data/currency_code.csv')
     currency_code = currency_code.dropna()
     header = ['Base', 'Date', 'Timestamp']
     symbols = currency_code['Code'].to_list()
     symbols = list(set(symbols))
     header.extend(symbols)
-    start = datetime(2019, 1, 1)
-    end = datetime(2019, 12, 31)
+    start = datetime(year, 1, 1)
+    end = datetime(year, 12, 31)
     step = timedelta(days=1)
     result_time = []
     while start < end:

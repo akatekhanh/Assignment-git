@@ -73,7 +73,7 @@ def polynomial_process(X, y):
     model = regression_model(X_, y)
     return model
 
-if __name__ == '__main__':
+def task4():
     currency_code = pd.read_csv('data/currency_code.csv')
     currency_code = currency_code.dropna()
     header = ['Base', 'Date', 'Timestamp']

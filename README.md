@@ -26,3 +26,12 @@
 
 # Task 8:
     - Program.prove_historically_FX_rate()
+
+
+# Docker
+## To build docker
+    docker build -t assignment  .    
+
+## To run docker
+    docker run -it assignment bash
+    python program.py 

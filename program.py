@@ -13,6 +13,7 @@ import matplotlib.dates as mdates
 
 from dotenv import load_dotenv
 from pkg.utils import get_currency_code, get_history_FX_rate, get_score_world_happiness_index
+from task_4 import task4
 load_dotenv()
 
 
@@ -215,44 +216,62 @@ if __name__ == '__main__':
     
     asset_portfolio = Program().add_to_asset()
 
-    # choise = input("Input your task you want to implement (from 2 to 9)")
-    ##########################################
-    # TODO: task 2 -> Program.get_history_FX_rate
-    # today = datetime.today().strftime("%Y-%m-%d")
-    # currency_code = input("Input your currency code you want to scrape: ")
-    # print(Program.get_history_FX_rate(today, currency_code))
-    ##########################################
-    # TODO: task 3a -> utils.get_currency_code
-    # Task 3a
-    # data_3a = get_currency_code()
-    # print(data_3a)
+    choise = input("Input your task you want to implement (from 2 to 9): ")
+    if choise == '2':
+        ##########################################
+        # TODO: task 2 -> Program.get_history_FX_rate
+        today = datetime.today().strftime("%Y-%m-%d")
+        currency_code = input("Input your currency code you want to scrape: ")
+        print(Program.get_history_FX_rate(today, currency_code))
+    
+    elif choise == '3':
+        ##########################################
+        # TODO: task 3a -> utils.get_currency_code
+        # Task 3a
+        data_3a = get_currency_code()
+        print(data_3a)
 
-    # Task 3b
-    # data_3b = get_score_world_happiness_index()
-    # print(data_3b)
+        # Task 3b
+        data_3b = get_score_world_happiness_index()
+        print(data_3b)
+    
+    elif choise == '4':
+        ##########################################
+        # TODO: task 4, let run this command: python task_4.py
+        task4()
+    
+    elif choise == '5':
     ##########################################
-    # TODO: task 4, let run this command: python task_4.py
-    ##########################################
-    # TODO: task 5: uncomment to run
-    # currency_code = 'VND'
-    # asset_portfolio.value_asset(
-    #     date='2019-02-03',
-    #     currency_code='VND',
-    #     data=None,
-    #     is_print=True
-    # )
-    ##########################################
-    # # TODO: task 6: 
-    # asset_portfolio.consolidate_asset(is_print=True)
-    ##########################################
-    # TODO: task 7:
-    # asset_portfolio.plot_the_change_in_value(
-    #     year=2019,
-    #     currency_code='EUR'
-    # )
-    ##########################################
-    # TODO: task 8
-    # asset_portfolio.prove_historically_FX_rate()
-    ##########################################
+        # TODO: task 5: uncomment to run
+        currency_code = 'VND'
+        asset_portfolio.value_asset(
+            date='2019-02-03',
+            currency_code='VND',
+            data=None,
+            is_print=True
+        )
+    
+    elif choise == '6':
+        ##########################################
+        # # TODO: task 6: 
+        asset_portfolio.consolidate_asset(is_print=True)
+    
+    elif choise == '7':
+        ##########################################
+        # TODO: task 7:
+        asset_portfolio.plot_the_change_in_value(
+            year=2019,
+            currency_code='EUR'
+        )
+    
+    elif  choise == '8':
+        ##########################################
+        # TODO: task 8
+        asset_portfolio.prove_historically_FX_rate()
+    
+    elif choise == '9':
+        ##########################################
+        pass
 
-    # asset_portfolio.consolidate_asset()
+    else:
+        print("Your choise does not exist")
