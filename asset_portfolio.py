@@ -3,22 +3,22 @@
 class AssetPortfolio(object):
     
     def __init__( self, *args, **kwargs ):
-        
+
         self.portfolio = list()
     
     def add( self, stock ):
-        
+
         self.portfolio.append(stock)
         
-    def value( self ):
-        
-        v = 0        
+    def value(self):
 
-        for s in self.portfolio:
+        value = 0        
+
+        for item in self.portfolio:
                 
-            v += s.value
+            value += item.value
             
-        return v
+        return value
     
     def consolidate( self ):
         raise Exception("NotImplementedException")

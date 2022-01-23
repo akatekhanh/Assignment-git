@@ -2,8 +2,16 @@
 
 from abc import ABC, abstractmethod
 
-class IExchangeRates(ABC):
+class Cash(ABC):
+    def __init__(self, amount: float):
+        """
+        In base currency EUR
+        Args:
+            amount (float): Amount
+        """
+        self.amount = amount
     
-    @abstractmethod
     def get_rate( self, from_currency:str, to_currency:str ):
-        pass
+        return to_currency/from_currency
+
+    
