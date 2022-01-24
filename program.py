@@ -211,6 +211,33 @@ class Program(object):
         
         return data
 
+    @staticmethod
+    def calculate_yearly_PlN():
+        week_in_year = 52
+        transfer_per_week = 100/week_in_year
+        
+        df = pd.read_csv('data/fx_rate_2019.csv')
+        df['Date'] = pd.to_datetime(df['Date'])
+        df['week'] = df['Date'].dt.isocalendar().week
+        start = df.head(1).reset_index().to_dict()
+        final = df.tail(1).reset_index().to_dict()
+
+        PlN = 0.0
+        # from HUF to RON
+        fx_rate_start = final.get('RON')[0]/final.get('HUF')[0]
+        fx_rate_final = final.get('RON')[0]/final.get('HUF')[0]
+        for week in range(1, week_in_year + 1):
+            weekend = df[df['week'] == week].tail(1).reset_index().to_dict()
+            fx_rate_weekend = weekend.get('RON')[0]/weekend.get('HUF')[0]
+            PlN += (fx_rate_weekend - fx_rate_start)*transfer_per_week
+
+        PlN = (fx_rate_final - fx_rate_start)*100 - PlN
+
+        result = PlN/final.get('HUF')[0]
+        print(f"The yearly PnL: {result*1000}*cost_per_KW (EUR)")
+
+        return result
+
 
 if __name__ == '__main__':
     
@@ -271,7 +298,7 @@ if __name__ == '__main__':
     
     elif choise == '9':
         ##########################################
-        pass
+        Program.calculate_yearly_PlN()
 
     else:
         print("Your choise does not exist")
